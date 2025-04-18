@@ -44,6 +44,7 @@ Create (or paste) a `.env` file in the root of your project and add your Telegra
 TOKEN=your_telegram_bot_token_here
 ```
 ## 🐳 Run APP
+_Download Docker:_ https://docs.docker.com/engine/install/
 
 ```bash
 ./run_deploy.sh
