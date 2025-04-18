@@ -25,7 +25,7 @@ async def messages_handler(message: Message) -> None:
     filename = message.document.file_name
 
     if not any(filename.endswith(f) for f in EXCEL_FORMATS):
-        await message.answer(f"🚫 Неверный формат файла: {filename}")
+        await message.answer(f"🚫 ERROR EXTENSION: {filename}")
         return
 
     file_path = os.path.join(DOWNLOAD_EXCEL_DIR, filename)
@@ -37,7 +37,7 @@ async def messages_handler(message: Message) -> None:
     async with aiofiles.open(file_path, 'wb') as f:
         await f.write(data)
 
-    await message.answer(f"✅ Файл загружен: {filename}")
+    await message.answer(f"✅ LOADED: {filename}")
     avg_prices_msg = await count_prod_avg_price_by_source()
     content_excel_msg = await read_excel_table_get_content_msg(file_path)
 

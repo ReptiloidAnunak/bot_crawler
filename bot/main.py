@@ -14,8 +14,8 @@ from bot.messages_handler import messages_handler
 from settings import BOT_MSG_REQUEST_DOC
 
 load_dotenv()
-
-TOKEN = "7892633432:AAEgVfkVnTq9k0RhbVc3KoJb-Xb4zdYAgKs"
+print()
+TOKEN = os.getenv("TOKEN")
 
 # All handlers should be attached to the Router (or Dispatcher)
 
