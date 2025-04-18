@@ -1,7 +1,7 @@
 
 
 import os.path
-
+import asyncio
 from aiogram.types import Message
 import aiofiles
 from settings import DOWNLOAD_EXCEL_DIR, EXCEL_FORMATS, BOT_MSG_REQUEST_DOC
@@ -31,8 +31,11 @@ async def messages_handler(message: Message) -> None:
     file_path = os.path.join(DOWNLOAD_EXCEL_DIR, filename)
     file_obj = await message.bot.download(message.document)
 
+    data = await file_obj.read() if hasattr(file_obj, 'read') and asyncio.iscoroutinefunction(
+        file_obj.read) else file_obj.read()
+
     async with aiofiles.open(file_path, 'wb') as f:
-        await f.write(file_obj.read())
+        await f.write(data)
 
     await message.answer(f"✅ Файл загружен: {filename}")
     avg_prices_msg = await count_prod_avg_price_by_source()
