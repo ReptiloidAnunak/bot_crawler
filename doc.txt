@@ -1,0 +1,3 @@
+title - chocolate.co.uk
+url - https://www.chocolate.co.uk/products/2-5kg-bulk-of-our-41-milk-hot-chocolate-drops
+xpath - //*[@id="shopify-section-template--14852577394731__main"]/section/div/div/div/product-meta/div/div[1]/span
