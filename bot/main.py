@@ -2,7 +2,6 @@ import asyncio
 import logging
 import os.path
 import sys
-from os import getenv
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
@@ -14,7 +13,6 @@ from bot.messages_handler import messages_handler
 from settings import BOT_MSG_REQUEST_DOC
 
 load_dotenv()
-print()
 TOKEN = os.getenv("TOKEN")
 
 # All handlers should be attached to the Router (or Dispatcher)
@@ -28,7 +26,6 @@ async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
-
     await message.answer(BOT_MSG_REQUEST_DOC)
 
 

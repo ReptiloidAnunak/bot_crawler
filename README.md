@@ -27,30 +27,8 @@ The file must contain the following columns:
 
 ```bash
 git clone https://github.com/ReptiloidAnunak/bot_crawler.git
+cd bot_crawler
 ```
-## 🚀 Installing Docker (if not already installed)
-
-If you don't have Docker installed, follow the steps below to install it on your system.
-
-### 🖥️ Windows
-
-1. **Download Docker Desktop for Windows**:  
-   Go to [Docker's official website](https://www.docker.com/products/docker-desktop) and download the Docker Desktop installer for Windows.
-
-2. **Run the installer**:  
-   After downloading, run the installer and follow the on-screen instructions.
-
-3. **Enable WSL 2 (Windows Subsystem for Linux)**:  
-   Docker Desktop for Windows requires WSL 2 to run Linux containers. Follow the instructions from Docker to install and configure WSL 2. You can find the guide [here](https://docs.microsoft.com/en-us/windows/wsl/install).
-
-4. **Start Docker**:  
-   After installation, open Docker Desktop from the Start Menu, and it will automatically start running. You might need to sign in with a Docker Hub account (create one if you don’t have one).
-
-5. **Verify Installation**:  
-   Open a terminal (PowerShell or Command Prompt) and run the following command to verify Docker is installed correctly:
-
-   ```bash
-   docker --version
    
 ### 🤖 Simple Telegram Bot Setup with `.env`
 
@@ -65,7 +43,16 @@ Create (or paste) a `.env` file in the root of your project and add your Telegra
 ```env
 TOKEN=your_telegram_bot_token_here
 ```
+## 🐳 Run APP
+
+```bash
+./run_deploy.sh
+```
+
 
 ## 👁‍ Test
 To test the bot, you can use the file tests/example.xls and send it to the bot in Telegram.
 This is a minimal viable product that reliably handles user input. Future versions may implement features such as currency detection, user authentication, payment integration, and more.
+
+##### 🐞 BUGS
+There are minor issues with loading the average prices by site — the calculation works fine and usually succeeds on the second attempt.

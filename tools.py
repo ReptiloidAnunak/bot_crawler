@@ -40,6 +40,9 @@ async def get_price(product):
             if price:
                 price = price[0]
                 if isinstance(price, str):
+                    match_point_price = re.search("\d+.\d\d\d", price)
+                    if match_point_price:
+                        price = price.replace('.', '')
                     match = re.search(r"(\d+(?:[\.,]\d+)?)", price)
                     if match:
                         price = float(match.group(1).replace(",", "."))
@@ -54,6 +57,7 @@ async def get_price(product):
                         price = float(match.group(1).replace(",", "."))
                     else:
                         price = 0
+
                 return price
 
             else:
@@ -100,30 +104,39 @@ async def get_all_products():
         products = result.scalars().all()
         return products
 
-async def count_prod_avg_price_by_source():
+
+async def count_prod_avg_price_by_source(max_retries: int = 5, delay: int = 2):
     async with AsyncSessionLocal() as session:
         async with session.begin():
             result_tuples_lst = []
             all_prod_urls = select(Product.url)
             result_avrg = await session.execute(all_prod_urls)
             all_urls = result_avrg.scalars().all()
+
+            if not all_urls:
+                return ("🐞 BUG: Failed to calculate average prices by site.\nPlease try sending your file again.")
+
             dns_lst = set([urlparse(url).hostname for url in all_urls])
             for dns in dns_lst:
                 stmt = select(Product).filter(Product.url.ilike(f'%{dns}%'))
                 result_avrg = await session.execute(stmt)
                 products = result_avrg.scalars().all()
-                prod_prices = []
-                for prod in products:
-                    prod_prices.append(prod.price)
+                prod_prices = [prod.price for prod in products if prod.price]
 
-                avg= sum(prod_prices) / len(prod_prices)
-                result_tuples_lst.append((dns, avg))
+                if prod_prices:
+                    avg = sum(prod_prices) / len(prod_prices)
+                    result_tuples_lst.append((dns, round(avg, 2)))
 
-            res_str_avg = [": ".join([t[0], str(t[1])]) for t in result_tuples_lst]
-            res_price_st = "\n".join(res_str_avg)
-            result = "\n".join([f'\n<strong>Average prices of products by sources:</strong>\n{res_price_st}'])
-            return result
+            if result_tuples_lst:
+                res_str_avg = [f"{dns}: {price}" for dns, price in result_tuples_lst]
+                return "\n<strong>Average prices of products by sources:</strong>\n" + "\n".join(res_str_avg)
+            else:
+                if max_retries > 0:
+                    await asyncio.sleep(delay)
+                    return await count_prod_avg_price_by_source(max_retries - 1, delay)
+                return "⚠️ Failed to load average prices after several retries."
+
 
 if __name__ == "__main__":
-    df = asyncio.run(count_prod_avg_price_by_source())
-    print(df)
+    a = asyncio.run(count_prod_avg_price_by_source())
+    print(a)
